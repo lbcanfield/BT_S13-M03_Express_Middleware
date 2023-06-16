@@ -7,8 +7,6 @@ function logger(request, response, next) {
           url = request.originalUrl;
 
      console.log(`${dts}\t[${mthd}]\trequest sent to ${url}`);
-
-
      next();
 }
 
@@ -27,16 +25,37 @@ async function validateUserId(request, response, next) {
           }
      }
      catch (error) {
-
+          response.status(500).json({
+               message: 'change this'
+          })
+          next();
      }
 }
 
 function validateUser(request, response, next) {
-     // DO YOUR MAGIC
+     const { name } = request.body;
+     if (!name || !name.trim()) {
+          response.status(400).json({
+               message: 'missing required name field'
+          })
+     }
+     else {
+          request.name = name.trim();
+          next();
+     }
 }
 
 function validatePost(request, response, next) {
-     // DO YOUR MAGIC
+     const { text } = request.body;
+     if (!text || !text.trim()) {
+          response.status(400).json({
+               message: "missing required text field"
+          })
+     }
+     else {
+          request.text = text.trim();
+          next();
+     }
 }
 
 module.exports = {
