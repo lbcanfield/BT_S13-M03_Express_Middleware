@@ -29,19 +29,22 @@ router.get('/:id', validateUserId, (request, response) => {
 router.post('/', validateUser, async (request, response, next) => {
      try {
           const newUser = await USERS.insert({ name: request.name });
-          response.json(newUser);
-          // console.log(newUser);
+          response.status(201).json(newUser);
      }
      catch (error) {
           next(error);
      }
 });
 
-router.put('/:id', validateUserId, validateUser, (request, response) => {
-     // RETURN THE FRESHLY UPDATED USER OBJECT
-     // this needs a middleware to verify user id
-     // and another middleware to check that the request body is valid
-     console.log(request.user)
+router.put('/:id', validateUserId, validateUser, async (request, response, next) => {
+     const { id } = request.params
+     try {
+          const updatedUser = await USERS.update(id, { name: request.name })
+          response.status(200).json(updatedUser)
+     }
+     catch (error) {
+          next(error);
+     }
 });
 
 router.delete('/:id', validateUserId, (request, response) => {
